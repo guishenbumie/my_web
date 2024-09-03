@@ -1,0 +1,287 @@
+syntax = "proto3";
+
+package im;
+
+option java_package = "oasis.st.grpc";
+option java_multiple_files = true;
+
+enum ContentType {
+  CT_INVALID = 0;
+  Text = 101;
+  Picture = 102;
+  Voice = 103;
+  Video = 104;
+  File = 105;
+  AtText = 106;
+  Merger = 107;
+  Card = 108;
+  Location = 109;
+  CUSTOM = 110;
+  Revoke = 111;
+  HasReadReceipt = 112;
+  Typing = 113;
+  Quote = 114;
+  SingleTipBegin = 200;
+  AcceptFriendApplicationTip = 201;
+  AddFriendTip = 202;
+  RefuseFriendApplicationTip = 203;
+  SetSelfInfoTip = 204;
+  RevokeServer = 205;
+  C2C_MESSAGE_AS_READ = 206;
+  KickOnlineTip = 303;
+  SingleTipEnd = 399;
+  //SysRelated
+  GroupTipBegin = 500;
+  TransferGroupOwnerTip = 501;
+  CreateGroupTip = 502;
+  JoinGroupTip = 504;
+  QuitGroupTip = 505;
+  SetGroupInfoTip = 506;
+  AcceptGroupApplicationTip = 507;
+  RefuseGroupApplicationTip = 508;
+  KickGroupMemberTip = 509;
+  InviteUserToGroupTip = 510;
+  DeleteGroupTip = 511;
+  GroupTipEnd = 599;
+}
+
+enum SessionType {
+  ST_INVALID = 0;
+  SINGLE_CHAT = 1; //单聊
+  GROUP_CHAT = 2; // 群聊，包括联盟频道
+  GLOBAL_CHAT = 3; // 世界频道
+  CROSS_GLOBAL_CHAT = 4; // 跨服世界频道
+}
+
+enum MsgFrom {
+  MF_INVALID = 0;
+  USER = 1;
+  SYSTEM = 2;
+}
+
+message BaseRequest {
+  string operationID = 1;
+  string token = 2;
+}
+
+message BaseResp {
+  int32 errorCode = 1;
+  string errorMsg = 2;
+
+}
+
+message UserInfo {
+  string uid = 1;
+  string name = 2;
+  string icon = 3;
+  int32 gender = 4;
+  string ex = 5;
+  string comment = 6;
+  string openId = 7;
+  string serverId = 8;
+}
+
+message Id2Result {
+  string uid = 1;
+  int32 result = 2;//0 ok; -1 error
+}
+/*--------------------auth begin--------------------*/
+message RegisterUserReq {
+  string uid = 1;
+  string name = 2;
+  string icon = 3;
+  int32 gender = 4;
+  string mobile = 5;
+  string birth = 6;
+  string email = 7;
+  string ex = 8;
+  string serverID = 9;
+  int32 platform = 10;
+  string secret = 11;
+  string serverToken = 12;
+  string openId = 13;
+}
+
+message RegisterUserResp {
+  BaseResp base = 1;
+}
+
+message UserTokenReq {
+  int32 platform = 1;
+  string uid = 2;
+  string serverID = 3;
+  string serverToken = 4;
+  string registerReq = 5;
+}
+
+message UserTokenResp {
+  BaseResp base = 1;
+  string uid = 2;
+  string token = 3;
+  int64 expiredTime = 4;
+}
+
+message ServerTokenReq {
+  string appId = 1;
+  string appSecret = 2;
+}
+
+message ServerTokenResp {
+  BaseResp base = 1;
+  string token = 2;
+  int64 expiredTime = 3;
+}
+/*--------------------auth end--------------------*/
+
+/*--------------------user begin--------------------*/
+/*--------------------user end--------------------*/
+
+/*--------------------group begin--------------------*/
+message GroupAddMemberInfo {
+  string uid = 1;
+  int32 setRole = 2;
+}
+
+message CreateGroup {
+  repeated GroupAddMemberInfo memberList = 1;
+  string groupName = 2;
+  string introduction = 3;
+  string notification = 4;
+  string faceUrl = 5;
+  string ex = 6;
+  string serverID = 7;
+  string groupType = 8;
+  string ownerUid = 9;
+  string allianceId = 10;
+}
+
+message CreateGroupReq {
+  string token = 1;
+  CreateGroup data = 2;
+}
+
+message CreateGroupResp {
+  BaseResp base = 1;
+  string groupID = 2;
+}
+
+message DeleteGroup {
+  string groupID = 1;
+  string serverID = 2;
+}
+
+message DeleteGroupRequest {
+  string token = 1;
+  DeleteGroup data = 2;
+}
+
+message DeleteGroupResponse {
+  BaseResp base = 1;
+}
+
+message GroupInfo {
+  string groupId = 1;
+  string groupName = 2;
+  string notification = 3;
+  string introduction = 4;
+  string faceUrl = 5;
+  int64 createTime = 6;
+  string ownerId = 7;
+  string ex = 8;
+  string groupType = 9;
+  int32 memberCount = 10;
+  int64 updateTime = 11;
+}
+
+message GetGroupsInfo {
+  repeated string groupIDList = 1;
+  string serverID = 2;
+}
+
+message GetGroupsInfoReq {
+  string token = 1;
+  GetGroupsInfo data = 2;
+}
+
+message GetGroupsInfoResp {
+  BaseResp base = 1;
+  repeated GroupInfo data = 2;
+}
+
+message GetGroupInfo {
+  string serverID = 1;
+  string groupID = 2;
+}
+
+message GetGroupInfoReq {
+  string token = 1;
+  GetGroupInfo data = 2;
+}
+
+message GetGroupInfoResp {
+  BaseResp base = 1;
+  GroupInfo data = 2;
+}
+
+message SetGroupInfo {
+  string groupID = 1;
+  string groupName = 2;
+  string notification = 3;
+  string introduction = 4;
+  string faceUrl = 5;
+  string serverID = 6;
+  string newOwnerId = 7;
+}
+
+message SetGroupInfoReq {
+  string token = 1;
+  SetGroupInfo data = 2;
+}
+
+message QuitGroup {
+  string groupID = 1;
+  string serverID = 2;
+}
+
+message QuitGroupReq {
+  string token = 1;
+  QuitGroup data = 2;
+}
+
+message AddGroupMemberBatch {
+  string groupID = 1;
+  string reason = 2;
+  repeated string uidList = 3;
+  string serverID = 4;
+}
+
+message AddGroupMemberBatchRequest {
+  string token = 1;
+  AddGroupMemberBatch data = 2;
+}
+
+message AddGroupMemberBatchResponse {
+  BaseResp base = 1;
+  repeated Id2Result result = 2;
+}
+
+message DelGroupMemberBatch {
+  string groupID = 1;
+  string reason = 2;
+  repeated string uidList = 3;
+  string serverID = 4;
+}
+
+message DelGroupMemberBatchRequest {
+  string token = 1;
+  DelGroupMemberBatch data = 2;
+}
+
+message DelGroupMemberBatchResponse {
+  BaseResp base = 1;
+  repeated Id2Result result = 2;
+}
+/*--------------------group end--------------------*/
+
+/*--------------------oasis_im_chat begin--------------------*/
+/*--------------------oasis_im_chat end--------------------*/
