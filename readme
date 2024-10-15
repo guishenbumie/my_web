@@ -1,0 +1,3 @@
+thrift -r --gen java --out src/main/java idl/thrift/gate_ws.thrift
+
+用IDEA生成gradle管理的jar包真的好方便，Gradle面板中对应项目的Tasks->build->jar，双击下就生成了

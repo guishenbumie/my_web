@@ -16,11 +16,19 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
+    implementation("org.slf4j:slf4j-simple:2.0.9")
+    implementation("org.slf4j:slf4j-api:2.0.13")
+
+    implementation("com.alibaba:fastjson:2.0.52")
+
     implementation("com.google.protobuf:protobuf-java:3.21.9")
     implementation("io.grpc:grpc-protobuf:1.53.0")
     implementation("io.grpc:grpc-stub:1.53.0")
 
+    implementation("org.apache.thrift:libthrift:0.16.0")
+
     implementation("org.java-websocket:Java-WebSocket:1.5.3")
+
 }
 
 sourceSets {
