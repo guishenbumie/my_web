@@ -7,8 +7,10 @@ import java.net.URI;
 import java.util.Scanner;
 import java.util.UUID;
 
+import static java.lang.StringTemplate.STR;
+
 public class Main {
-    private final static String HOST = "oasis-st-im-sandbox.dailygn.com";
+    private final static String HOST = "oasis-st-im.bytedgame.com";
 
     private static Client client;
     public static void main(String[] args) throws Exception {

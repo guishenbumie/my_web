@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
+        var t = EReloadType.valueOf("CFG");
+        System.out.println(t);
 //        var oldMap = new HashMap<Integer, Integer>();
 //        oldMap.put(1, 11);
 //        oldMap.put(2, 22);

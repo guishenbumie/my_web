@@ -3,28 +3,34 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 plugins {
-    id("java")
+    java
+    id("org.springframework.boot") version "3.3.4"
+    id("io.spring.dependency-management") version "1.1.6"
 }
 
 group = "sfm.web"
-version = "1.0-SNAPSHOT"
+version = "0.0.1"
+base.archivesName.set("webTest")
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(23)
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation(project(":hot_swap_common"))
 
-    // https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
-    implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    implementation("org.apache.commons:commons-lang3:3.17.0")
-    implementation("com.alibaba:fastjson:2.0.52")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-tasks.test {
+tasks.withType<Test> {
     useJUnitPlatform()
 }
 
@@ -38,7 +44,7 @@ tasks.jar {
                     "${System.getProperty("java.version")} (${System.getProperty("java.vendor")} ${System.getProperty("java.vm.version")})",
             "Build-OS" to
                     "${System.getProperty("os.name")} ${System.getProperty("os.arch")} ${System.getProperty("os.version")}",
-            "Main-Class" to "sfm.web.Main",
+            "Main-Class" to "sfm.web.hot_swap_web_test.HotSwapWebTestApplication",
         )
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

@@ -1,5 +1,5 @@
 group = "sfm.web"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 subprojects {
     apply(plugin = "java")
@@ -20,7 +20,7 @@ subprojects {
 //        options.compilerArgs += "--enable-preview"
         options.compilerArgs.addAll(
             listOf(
-                "--enable-preview",
+//                "--enable-preview",
                 "--add-exports",
                 "java.base/jdk.internal.misc=ALL-UNNAMED"
             )

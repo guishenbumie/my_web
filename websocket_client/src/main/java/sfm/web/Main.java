@@ -19,7 +19,6 @@ public class Main {
     public final static String GROUP_ID = "";
 
     private static Client client;
-
     public static void main(String[] args) throws Exception {
         var url = "wss://"+HOST+"/websocket?sendID="+UID+"&platformID=3&Token="+TOKEN+"&ServerID=10001&MsgType=1";
 //        var url = "ws://localhost:8887";

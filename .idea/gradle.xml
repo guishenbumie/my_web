@@ -10,22 +10,15 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/hot_swap_common" />
             <option value="$PROJECT_DIR$/hot_swap_test" />
+            <option value="$PROJECT_DIR$/hot_swap_web_test" />
             <option value="$PROJECT_DIR$/http_test" />
+            <option value="$PROJECT_DIR$/listener_test" />
             <option value="$PROJECT_DIR$/test" />
-            <option value="$PROJECT_DIR$/untitled" />
             <option value="$PROJECT_DIR$/websocket_client" />
             <option value="$PROJECT_DIR$/websocket_client2" />
             <option value="$PROJECT_DIR$/websocket_server" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/demo" />
-        <option name="gradleJvm" value="21" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/demo" />
           </set>
         </option>
       </GradleProjectSettings>

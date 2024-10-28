@@ -1,0 +1,6 @@
+1. 编译hot_swap_common生成jar包agent-1.0.jar
+2. 编译hot_swap_test生成jar包test-1.0.jar
+3. 将两个jar放到同一个目录中，在该目录中创建hot_swap_web_test\patches目录
+4. 运行 java -javaagent:agent-1.0.jar -jar test-1.0.jar
+5. 将需要热更新的.class文件放到hot_swap_web_test\patches目录中
+6. 输入 reload，热更新成功

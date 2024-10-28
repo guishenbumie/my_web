@@ -1,21 +1,33 @@
 package sfm.web;
 
-import java.util.concurrent.CountDownLatch;
+import sfm.web.hotswap.HotSwapV2;
+import java.util.Scanner;
 
 public class Main {
-    private static CountDownLatch latch;
+
+//    private static CountDownLatch latch;
 
     public static void main(String[] args) {
-        latch = new CountDownLatch(1);
-
-        new WebService().start();
-
-        var p = new Person("tom", 20);
-        System.out.println("My name is " + p.getName());
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        var p = new Person("tom", 10);
+        System.out.println("Hello world!" + p.getName());
+//        latch = new CountDownLatch(1);
+        var scanner = new Scanner(System.in);
+        boolean exit = false;
+        while (!exit) {
+            var input = scanner.nextLine();
+            if (input.equals("0")) {
+                exit = true;
+            } else if (input.equals("reload")) {
+                reload();
+            } else {
+                System.out.println(p.getName());
+            }
         }
+    }
+
+    private static void reload() {
+        System.out.println("reload...");
+        var res = HotSwapV2.reloadAllClass(0);
+        System.out.println(res);
     }
 }
