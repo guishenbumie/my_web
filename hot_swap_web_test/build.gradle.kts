@@ -25,6 +25,8 @@ repositories {
 dependencies {
     implementation(project(":hot_swap_common"))
 
+    implementation("com.alibaba:fastjson:2.0.52")
+
     implementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

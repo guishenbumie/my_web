@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class HotSwapAgent {
     private static final Logger logger = LoggerFactory.getLogger(HotSwapAgent.class);
     public static String BACKUP_ROOT_DIR = "";
-    public static final String PATCH_DIR = "hot_swap_web_test/patches";
+    public static final String PATCH_DIR = "./hot_swap_test/patches";
     public static final String PATCH_CLASSPATH_DIR = PATCH_DIR + File.separator + "classpath";
     public static final String PATCH_DEPRECATED_DIR = PATCH_DIR + File.separator + "deprecated";
 

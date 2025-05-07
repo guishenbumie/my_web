@@ -8,6 +8,8 @@ public class Main {
 //    private static CountDownLatch latch;
 
     public static void main(String[] args) {
+        var s = "a.data";
+        System.out.println(s.substring(0, s.length() - 5));
         var p = new Person("tom", 10);
         System.out.println("Hello world!" + p.getName());
 //        latch = new CountDownLatch(1);

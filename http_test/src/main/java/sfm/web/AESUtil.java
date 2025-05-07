@@ -9,7 +9,7 @@ import java.util.Base64;
 
 class AESUtil {
     private static String sKey = "0df2aff36b49875b96eed999ab747c48"; //密钥是string类型 长度是16、24、32
-    private static String ivParameter = sKey.substring(4, 20); ; //偏移量是密钥截取16位，也是string类型
+    private static String ivParameter = sKey.substring(0, 16); ; //偏移量是密钥截取16位，也是string类型
     static String encrypt(String str) throws Exception {
         try {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
