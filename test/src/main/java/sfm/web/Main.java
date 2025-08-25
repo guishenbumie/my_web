@@ -1,11 +1,12 @@
 package sfm.web;
 
-import java.time.LocalTime;
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -93,77 +94,74 @@ public class Main {
         return text.codePoints().anyMatch(Character::isEmoji);
     }
 
-    public static void main(String[] args) {
-        var s1 = "中文sfm";
-        System.out.println(containsEmoji(s1) + " " + containsEmoji1(s1));
-        var s2 = "はsfm1";
-        System.out.println(containsEmoji(s2) + " " + containsEmoji1(s2));
-//        boolean res = true;
-//        for (int i = 0; i < s2.length(); i++) {
-//            int codePoint = s2.codePointAt(i);
-////            System.out.println(codePoint);
-//            if (Character.isEmoji(codePoint)) {
-////                System.out.print(new String(Character.toChars(codePoint)) + "  ");
-//                res = false;
-//                break;
-//            }
-//        }
-//        System.out.println(res);
-//        System.out.println(containsEmoji(s2));
-//        System.out.println(s2.codePoints().noneMatch(Character::isEmoji));
-        var s3 = "😒";
-        System.out.println(containsEmoji(s3) + " " + containsEmoji1(s3));
-//        System.out.println(s3.codePoints().noneMatch(Character::isEmoji));
-//        var str = "04:00:00";
-//        var lt = LocalTime.parse(str);
-//        System.out.println(lt);
-//        var l = new HashMap<Integer, List<Integer>>();
-//        l.put(1, Arrays.asList(2, 3));
-//        for (var ll : l.get(2)) {
-//            System.out.println(ll);
-//        }
-//        var t = EReloadType.valueOf("CFG");
-//        System.out.println(t);
-//        var oldMap = new HashMap<Integer, Integer>();
-//        oldMap.put(1, 11);
-//        oldMap.put(2, 22);
-//        var newMap = new HashMap<Integer, Integer>();
-//        newMap.put(2, 22);
-//        newMap.put(3, 33);
-//        newMap.forEach((id, val) -> {
-////            var oldV = oldMap.compute(id, (k, v) -> v == null ? "0" : oldMap.remove(id));
-//            var oldV = 0;
-//            if (oldMap.containsKey(id)) {
-//                oldV = oldMap.remove(id);
-//            }
-//            var newV = val - oldV;
-//            System.out.println(newV);
-//        });
-//        System.out.println();
-//        oldMap.forEach((id, val) -> System.out.println(val));
-//
-//        Map<Integer, Person> m1 = new HashMap<>();
-//        m1.put(1, new Person(1, 1));
-//        m1.put(2, new Person(2, 2));
-//        Map<Integer, Person> m2 = new HashMap<>();
-//        m2.put(2, new Person(2, 2));
-//        m2.put(3, new Person(3, 3));
-//        Map<Integer, Integer> m3 = Stream.concat(
-//                m1.values().stream(),
-//                m2.values().stream()
-//        ).collect(Collectors.groupingBy(Person::getAge, Collectors.summingInt(Person::getCount)));
-//        System.out.println(m3);
+    public interface ICondParam {
+        List<String> getValue();
+    }
 
-//        var q = new PriorityQueue<Person>(2, new PersonComparator());
-//        q.add(new Person(1, 1));
-//        q.add(new Person(2, 2));
-//        q.add(new Person(3, 3));
-//        System.out.println(q.poll());
+    public record UniqueCondParam(Object param) implements ICondParam {
+        @Override
+        public List<String> getValue() {
+            return List.of(String.valueOf(param));
+        }
+    }
+
+    //天赋id
+    public record PvpKillNum_TalentId(int talentId) implements ICondParam {
+        @Override
+        public List<String> getValue() {
+            return List.of(String.valueOf(talentId));
+        }
+    }
+
+    public record PvpKillNum_TalentIds(List<Integer> ids) implements ICondParam {
+        @Override
+        public List<String> getValue() {
+            return ids.stream().map(String::valueOf).toList();
+        }
+    }
+
+    public static float getMutation(float score) {
+        var test = "0,0;1.5,0.05;3,0.3;8,0.5";
+        var arr = test.split(";");
+        var mutationCurveList = new LinkedList<Pair<Float, Float>>();
+        for (String s : arr) {
+            var p = s.split(",");
+            mutationCurveList.add(Pair.of(Float.parseFloat(p[0]), Float.parseFloat(p[1])));
+        }
+
+        if (score < 0)
+            return 0.0f;
+        var max = mutationCurveList.getLast();
+        if (score >= max.getLeft())
+            return max.getRight();
+
+        var left = 0;
+        var right = mutationCurveList.size() - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (mutationCurveList.get(mid).getLeft() <= score)
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
+        int idx;
+        if (left >= mutationCurveList.size())
+            idx = mutationCurveList.size() - 2;
+        else
+            idx = right;
+        System.out.println("score:" + score + "\t" + idx);
+
+        var x1 = mutationCurveList.get(idx).getLeft();
+        var y1 = mutationCurveList.get(idx).getRight();
+        var x2 = mutationCurveList.get(idx + 1).getLeft();
+        var y2 = mutationCurveList.get(idx + 1).getRight();
+        return ((y2 - y1) * (score - x1) + (x2 - x1) * y1) / (x2 - x1);
     }
 
     static class Person {
         private final int age;
         private final int count;
+
         public Person(int age, int count) {
             this.age = age;
             this.count = count;
@@ -183,6 +181,112 @@ public class Main {
         @Override
         public int compare(Person o1, Person o2) {
             return o1.getAge() - o2.getAge();
+        }
+    }
+
+    public static void main(String[] args) {
+////        var mgr = new FunctionMgr();
+//////        mgr.enableSwitch(EFunctionType.Wine);
+//////        mgr.enableSwitch(EFunctionType.Trade);
+//////        mgr.enableSwitch(EFunctionType.Urban);
+////        // 检查单个开关状态
+////        System.out.println("Wine开关是否开启: " + mgr.isSwitchEnabled(EFunctionType.Wine)); // true
+////
+////        // 获取所有开启的开关
+////        List<Integer> enabled = mgr.getEnabledSwitches();
+////        System.out.println("当前开启的开关: " + enabled);
+////        System.out.println(mgr.getSwitchStates());
+//
+////        System.out.println(1 << 30);
+////        var val = 0;
+////        val |= 1 << 30;
+////        System.out.println(val);
+//        for (int i = 1; i <= 31; i++) {
+//            var mgr = new FunctionMgr();
+//            for (int j = 1; j <= i; j++) {
+//                mgr.enableSwitch(j);
+//            }
+//            System.out.println(i + ": " + mgr.getSwitchStates());
+//        }
+
+        var pod11 = new PodInfo("11", 108, 101, 1, 3);//2
+        var pod12 = new PodInfo("12", 108, 101, 10, 30);//20
+        var pod21 = new PodInfo("22", 109, 101, 1, 3);
+        var pod22 = new PodInfo("22", 109, 101, 10, 30);
+        podByVersion.put(108, List.of(pod11, pod12));
+        podByVersion.put(109, List.of(pod21, pod22));
+        var resp = calcInsCounts();
+        System.out.println(resp);
+
+    }
+
+
+    private static Map<Integer, Map<Integer, InstanceCount>> clientVer2InsCountMap = new HashMap<>();
+    private static Map<Integer, List<PodInfo>> podByVersion = new ConcurrentHashMap<>();
+
+    public record InstanceCount(long used, long total) {
+    }
+
+    public static Map<Integer, Map<Integer, InstanceCount>> calcInsCounts() {
+        var newVerMap = new HashMap<Integer, Set<Integer>>();//key=clientVer, value=interVer集合
+        var newClientVer2InsCountMap = new HashMap<Integer, Map<Integer, InstanceCount>>();//key=clientVer, value={key=interVer, value=实例总数和使用数量}
+        try {
+            for (var entry : podByVersion.entrySet()) {
+                var clientVer = entry.getKey();
+                var podList = entry.getValue();
+                if (podList == null || podList.isEmpty())
+                    continue;
+                var newInsCountMap = podList.stream().collect(Collectors.toMap(
+                        p -> p.interVer,
+                        p -> new InstanceCount(p.total - p.leftNum, p.total),
+                        (oldIns, newIns) -> new InstanceCount(oldIns.used() + newIns.used(), oldIns.total() + newIns.total())));
+                newClientVer2InsCountMap.put(clientVer, newInsCountMap);
+            }
+            for (var entry : newClientVer2InsCountMap.entrySet()) {
+                var clientVer = entry.getKey();
+                var newInterVerSet = entry.getValue().keySet();
+                var insCountMap = clientVer2InsCountMap.get(clientVer);
+                if (insCountMap == null) {
+                    newVerMap.put(clientVer, newInterVerSet);
+                } else {
+                    var interVerSet = insCountMap.keySet();
+                    var diffNewInterVerSet = newInterVerSet.stream().filter(interVer -> !interVerSet.contains(interVer)).collect(Collectors.toSet());
+                    newVerMap.put(clientVer, diffNewInterVerSet);
+                }
+            }
+            clientVer2InsCountMap = newClientVer2InsCountMap;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return clientVer2InsCountMap;
+    }
+
+    public static class PodInfo {
+        private String host;
+        private int clientVer;
+        private int interVer;
+        private int leftNum;
+        private int total;
+
+        public PodInfo(String host, int clientVer, int interVer, int leftNum, int total) {
+            this.host = host;
+            this.clientVer = clientVer;
+            this.interVer = interVer;
+            this.leftNum = leftNum;
+            this.total = total;
+        }
+
+        public String getHost() {
+            return host;
+        }
+
+        public int getLeftNum() {
+            return leftNum;
+        }
+
+        public int getTotal() {
+            return total;
         }
     }
 }

@@ -25,16 +25,14 @@ public class Client {
     }
 
     @OnOpen
-    public void onOpen(Session session)
-    {
+    public void onOpen(Session session) {
         System.out.println("连接websocket成功执行");
         this.session = session;
     }
 
     @OnError
-    public void onError(Throwable t)
-    {
-        System.out.println(STR."websocket连接发生异常执行, \{t.getMessage()}");
+    public void onError(Throwable t) {
+        System.out.println("websocket连接发生异常执行, " + t.getMessage());
     }
 
     @OnMessage
@@ -69,7 +67,7 @@ public class Client {
         if (resp == null) {
             return;
         }
-        System.out.println(STR."receive pong, msgIncr=\{resp.msgIncr}");
+        System.out.println("receive pong, msgIncr=" + resp.msgIncr);
     }
 
     private void pullSessionList(IMMessage msg) throws JsonProcessingException {
@@ -77,7 +75,7 @@ public class Client {
         if (resp == null) {
             return;
         }
-        System.out.println(STR."pull_session_list_v2_resp, msgIncr=\{resp.msgIncr}, errCode=\{resp.errCode}, errMsg=\{resp.errMsg}, ");
+        System.out.println("pull_session_list_v2_resp, msgIncr=" + resp.msgIncr + ", errCode=" + resp.errCode + ", errMsg=" + resp.errMsg);
     }
 
     private void getNewestSeq(IMMessage msg) throws JsonProcessingException {
@@ -85,6 +83,6 @@ public class Client {
         if (resp == null) {
             return;
         }
-        System.out.println(STR."get_newest_set_resp, msgIncr=\{resp.msgIncr}, errCode=\{resp.errCode}, errMsg=\{resp.errMsg}, seq=\{resp.seq}");
+        System.out.println("get_newest_set_resp, msgIncr=" + resp.msgIncr + ", errCode=" + resp.errCode + ", errMsg=" + resp.errMsg + ", seq=" + resp.seq);
     }
 }

@@ -1,6 +1,7 @@
 package sfm.web;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import org.apache.hc.core5.http.HttpHeaders;
 
 import java.net.URLDecoder;
@@ -17,7 +18,10 @@ public class Main {
 //        clearWorldChat(102);
 //        clearWorldChat(103);
 //        reload();
-        shield();
+//        shield();
+//        reduce();
+//        replace();
+        reloadGameConf();
     }
 
     private static void clearWorldChat(int id) {
@@ -54,6 +58,88 @@ public class Main {
         }
     }
 
+    private static void reloadGameConf() {
+        try {
+            var options = HttpClient.HeadOptions.build()
+//                    .setContentType("application/json")
+                    .setEncoding("UTF-8")
+                    .setHeader(HttpHeaders.ACCEPT, "application/json");
+
+            var region = new HashMap<String, String>();
+            region.put("cn", "1111");
+            region.put("sg", "1111");
+//            var m = new HashMap<String, Object>();
+//            m.put("AppID", 613238);
+//            m.put("RtcAppKey", "123456");
+//            m.put("IsCe", false);
+//            m.put("Region", region);
+//            var str = JSON.toJSONString(m);
+            //101.133.138.8:20000
+            var str = "ServerRegion: sg\n" +
+//                    "Region:\n" +
+//                    "  \"cn\": 10\n" +
+//                    "  \"sg\": 11\n" +
+                    "IsCe: false\n";
+            var base64 = Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
+            System.out.println(base64);
+//            var content = URLEncoder.encode(base64, StandardCharsets.UTF_8);
+
+            var params = HttpClient.Params.build()
+                    .addParam("reload_type", "reload_gameconf")
+                    .addParam("svc_type", "gs")
+                    .addParam("files", base64)
+                    .addParam("timestamp", System.currentTimeMillis());
+
+            var httpResp = HttpClient.get("http://127.0.0.1:12003/reload", params, options);//发送http请求
+//            var httpResp = HttpClient.get("http://10.253.14.169:12003/reload", params, options);//发送http请求
+            System.out.println(httpResp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void reduce() {
+        try {
+            var options = HttpClient.HeadOptions.build()
+//                    .setContentType("application/json")
+                    .setEncoding("UTF-8")
+                    .setHeader(HttpHeaders.ACCEPT, "application/json");
+
+            var params = HttpClient.Params.build()
+                    .addParam("reload_type", "reload_reduce")
+                    .addParam("svc_type", "ds")
+                    .addParam("replicas", "1")
+                    .addParam("timestamp", System.currentTimeMillis());
+
+            var httpResp = HttpClient.get("http://127.0.0.1:12003/reload", params, options);//发送http请求
+            System.out.println(httpResp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void replace() {
+        try {
+            var options = HttpClient.HeadOptions.build()
+//                    .setContentType("application/json")
+                    .setEncoding("UTF-8")
+                    .setHeader(HttpHeaders.ACCEPT, "application/json");
+
+            var params = HttpClient.Params.build()
+                    .addParam("reload_type", "reload_replace")
+                    .addParam("svc_type", "ds")
+                    .addParam("clientver", "1")
+//                    .addParam("interver", "1")
+                    .addParam("replicas", "1")
+                    .addParam("timestamp", System.currentTimeMillis());
+
+            var httpResp = HttpClient.get("http://127.0.0.1:12003/reload", params, options);//发送http请求
+            System.out.println(httpResp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private static void shield() {
         try {
             var options = HttpClient.HeadOptions.build()
@@ -64,8 +150,8 @@ public class Main {
             var base64 = Base64.getEncoder().encodeToString("我爱习近平".getBytes());
             var content = URLEncoder.encode(base64, StandardCharsets.UTF_8);
             System.out.println(content);
-//            var params = HttpClient.Params.build()
-//                    .addParam("content", "奥术大师");
+            var params = HttpClient.Params.build()
+                    .addParam("content", "奥术大师");
 
             var httpResp = HttpClient.get("http://127.0.0.1:12003/antidirt/shield", params, options);//发送http请求
 //            var httpResp = HttpClient.get("http://10.253.14.169:12003/antidirt/shield", params, options);//发送http请求

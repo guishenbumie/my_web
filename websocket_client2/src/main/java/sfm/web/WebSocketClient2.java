@@ -1,22 +1,20 @@
 package sfm.web;
 
 import thrift_gen.oasis_im.gate_ws.*;
-import thrift_gen.oasis_im.rpc.SESSION_TYPE;
 
 import java.net.URI;
 import java.util.Scanner;
 import java.util.UUID;
 
-import static java.lang.StringTemplate.STR;
-
-public class Main {
+public class WebSocketClient2 {
     private final static String HOST = "oasis-st-im.bytedgame.com";
 
     private static Client client;
+
     public static void main(String[] args) throws Exception {
         var uid = "83323837712140291";
-        var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOiI4MzMyMzgzNzcxMjE0MDI5MSIsIlBsYXRmb3JtIjoiIiwiZXhwIjoxNzI1OTQwNjU1LCJpYXQiOjE3MjUzMzU4NTUsIm5iZiI6MTcyNTMzNTg1NX0.wtRwE4rJcsrMertjdQfYaujwfxtbheTUW46SVjTZjz8";
-        var url = STR."wss://\{HOST}/websocket?sendID=\{uid}&platformID=3&Token=\{token}&ServerID=10001&MsgType=1";
+        var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOiIzNzQ3NTc4ODc4MTAzNTg2MzExIiwiUGxhdGZvcm0iOiIiLCJleHAiOjE3NTI1NzA3NzksImlhdCI6MTc1MTk2NTk3OSwibmJmIjoxNzUxOTY1OTc5fQ.YCUCauRpN20Gbm42E6bz9KLm2euHO1BMiZSWzTvdDr0";
+        var url = "wss://" + HOST + "/websocket?sendID=" + uid + "&platformID=3&Token=" + token + "&ServerID=10001&MsgType=1";
         client = new Client(new URI(url));
 
         var scanner = new Scanner(System.in);
@@ -25,7 +23,7 @@ public class Main {
             System.out.println("1:ping  2:");
             System.out.print("Enter a value: ");
             String input = scanner.nextLine();
-            System.out.println(STR."You entered: \{input}");
+            System.out.println("You entered: " + input);
             if (input.equals("0")) {
                 exit = true;
             } else {
@@ -56,7 +54,7 @@ public class Main {
             System.out.println(text);
             client.sendMessage(text);
         } catch (Exception e) {
-            System.out.println(STR."TTransportException, e=\{e.getMessage()}");
+            System.out.println("TTransportException, e=" + e.getMessage());
         }
     }
 
@@ -71,7 +69,7 @@ public class Main {
             System.out.println(text);
             client.sendMessage(text);
         } catch (Exception e) {
-            System.out.println(STR."TTransportException, e=\{e.getMessage()}");
+            System.out.println("TTransportException, e=" + e.getMessage());
         }
     }
 }

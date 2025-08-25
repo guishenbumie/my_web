@@ -12,7 +12,9 @@ public class DBMain {
         database = client.getDatabase("st_dev");
 //        var collection = database.getCollection("tasks");
         var collection = database.getCollection("users");
-        long uniqId = 177905975028542649L;
+//        var collection = database.getCollection("roles");
+        long uniqId = 6642830975197312550L;
+//        long uniqId = 6642268037417331390L;
         var res = collection.find(Filters.eq("_id", uniqId)).first();
         System.out.println(res);
 //        System.out.println(res.get("account").toString());
