@@ -1,0 +1,4 @@
+com.sfm.etcd.resolver.DnsSrvResolverProvider
+com.sfm.etcd.resolver.HttpResolverProvider
+com.sfm.etcd.resolver.HttpsResolverProvider
+com.sfm.etcd.resolver.IPResolverProvider

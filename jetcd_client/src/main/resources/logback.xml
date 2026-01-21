@@ -1,0 +1,16 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Jetcd 客户端日志（调试级别） -->
+    <logger name="io.etcd" level="DEBUG"/>
+    <!-- gRPC 通信日志（调试级别，查看请求/响应细节） -->
+    <logger name="io.grpc" level="DEBUG"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

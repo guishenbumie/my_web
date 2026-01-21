@@ -1,12 +1,16 @@
 package sfm.web;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import java.util.zip.CRC32C;
 
 public class Main {
 
@@ -209,15 +213,27 @@ public class Main {
 //            System.out.println(i + ": " + mgr.getSwitchStates());
 //        }
 
-        var pod11 = new PodInfo("11", 108, 101, 1, 3);//2
-        var pod12 = new PodInfo("12", 108, 101, 10, 30);//20
-        var pod21 = new PodInfo("22", 109, 101, 1, 3);
-        var pod22 = new PodInfo("22", 109, 101, 10, 30);
-        podByVersion.put(108, List.of(pod11, pod12));
-        podByVersion.put(109, List.of(pod21, pod22));
-        var resp = calcInsCounts();
-        System.out.println(resp);
+//        var pod11 = new PodInfo("11", 108, 101, 1, 3);//2
+//        var pod12 = new PodInfo("12", 108, 101, 10, 30);//20
+//        var pod21 = new PodInfo("22", 109, 101, 1, 3);
+//        var pod22 = new PodInfo("22", 109, 101, 10, 30);
+//        podByVersion.put(108, List.of(pod11, pod12));
+//        podByVersion.put(109, List.of(pod21, pod22));
+//        var resp = calcInsCounts();
+//        System.out.println(resp);
 
+        var msg = "your_data_to_hash爱上帝就发哦手机导购i啊就是大概i骄傲靠靠靠靠靠靠靠靠靠靠靠靠靠靠靠靠靠靠靠行程开关骄傲练到访v阿基拉阿斯达克法律框架是的罚款了就速度快v扩大宣传v四道口附近啊";
+        byte[] data = msg.getBytes();
+        CRC32C crc32c = new CRC32C();
+        crc32c.update(data);
+
+        long crcValue = crc32c.getValue();
+        System.out.println("result::::::::::" + crcValue);
+
+        var murmurHash = Hashing.murmur3_128()
+                .hashString(msg, StandardCharsets.UTF_8)
+                .asLong();
+        System.out.println("result::::::::::" + murmurHash);
     }
 
 

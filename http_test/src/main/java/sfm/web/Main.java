@@ -4,16 +4,16 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import org.apache.hc.core5.http.HttpHeaders;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
+import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 //        setWorldChat(7);
 //        clearWorldChat(102);
 //        clearWorldChat(103);
@@ -21,7 +21,116 @@ public class Main {
 //        shield();
 //        reduce();
 //        replace();
-        reloadGameConf();
+//        reloadGameConf();
+//        paid(false);
+//        paid(false);
+//        var key = "vlkcJd6phjZSuNPugSarXPTEQI5BKuhC";
+//        var ts = 1767861412408L;
+//        var str = "woshidaijiamideneirong";
+//        System.out.println(generateSignature(str, key, ts));
+        gm();
+    }
+
+    private static String generateSignature(String dataToSign, String key, long timestamp) throws Exception {
+        System.out.println("token interceptor dataToSign:" + dataToSign + ", timestamp:" + timestamp);
+        dataToSign += timestamp;
+        System.out.println("token interceptor final dataToSign:" + dataToSign);
+        Mac mac = Mac.getInstance("HmacSHA256");
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+        mac.init(secretKeySpec);
+        byte[] rawHmac = mac.doFinal(dataToSign.getBytes(StandardCharsets.UTF_8));
+        return Base64.getEncoder().encodeToString(rawHmac);
+    }
+
+    private static String generateSignature2(String dataToSign, String key, long timestamp) throws Exception {
+        Mac mac = Mac.getInstance("HmacSHA1");
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA1");
+        mac.init(secretKeySpec);
+        byte[] rawHmac = mac.doFinal(dataToSign.getBytes(StandardCharsets.UTF_8));
+        return Base64.getEncoder().encodeToString(rawHmac);
+    }
+
+    private static void paid(boolean refund) throws Exception {
+        var appKey = "PkcLwqzHHIcZ9REmY737LTyk6kHNkKZD";
+
+        var ts = System.currentTimeMillis() / 1000L;
+        var params = HttpClient.Params.build();
+        params.addParam("sdk_open_id", "sfm502");
+        params.addParam("role_id", "3735200842312885761");
+        params.addParam("order_id", "1230001");
+        params.addParam("product_id", "recharge.pst.coins1");
+        params.addParam("balance", "300");
+        params.addParam("app_id", "613238");
+        params.addParam("create_time", String.valueOf(ts));
+        params.addParam("currency_type", "USD");
+        params.addParam("extra_info", "");
+        params.addParam("gen_balance", "0");
+        params.addParam("order_id_third", "GPA.3361-1506-5174-74499");
+        params.addParam("os", "android");
+        params.addParam("pay_channel", "10");
+        params.addParam("pay_time", String.valueOf(ts));
+        params.addParam("server_id", "8101");
+        params.addParam("status", "2");
+        params.addParam("total_amount", "999");
+        if (refund) {
+            params.addParam("notice_type", "REFUND");
+        }
+
+        var sortMap = new TreeMap<>(String::compareTo);
+        sortMap.putAll(params.getParams());
+        var list = new ArrayList<String>();
+        for (Map.Entry<String, Object> entry : sortMap.entrySet()) {
+            list.add(entry.getKey() + "=" + entry.getValue());
+        }
+        var paramString = String.join("&", list);
+        var sign = generateSignature2(paramString, appKey, ts);
+        params.addParam("sign", sign);
+
+        var options = HttpClient.HeadOptions.build()
+                .setContentType("application/x-www-form-urlencoded")
+                .setHeader(HttpHeaders.ACCEPT, "application/json");
+
+        try {
+            var httpResp = HttpClient.post("http://127.0.0.1:12003/recharge/paid", params, options);//发送http请求
+            System.out.println(httpResp);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void gm() throws Exception {
+        var secretKey = "vlkcJd6phjZSuNPugSarXPTEQI5BKuhC";
+
+        var m = new HashMap<String, Object>();
+//        m.put("user_id", 1558836624275278925L);
+//        m.put("role_id", 1558836624275278939L);
+        m.put("role_id", 3735202212971722755L);
+
+        m.put("command", "ds");
+        m.put("sub_command", "SetCameraRotation");
+        m.put("params", new String[]{"0", "-90"});
+
+//        m.put("command", "br");
+//        m.put("sub_command", "getbattlerecord");
+        var jsonString = JSON.toJSONString(m);
+        var body = Base64.getEncoder().encodeToString(jsonString.getBytes(StandardCharsets.UTF_8));
+        System.out.println("body:" + body);
+
+        var ts = System.currentTimeMillis();
+        var token = generateSignature(body, secretKey, ts);
+        System.out.println("token:" + token);
+        var options = HttpClient.HeadOptions.build()
+                .setContentType("application/json")
+                .setHeader(HttpHeaders.ACCEPT, "application/json")
+                .setHeader("X-Token", token)
+                .setHeader("timestamp", String.valueOf(ts));
+
+        try {
+            var httpResp = HttpClient.postBody("http://127.0.0.1:12003/gm", body, options);//发送http请求
+            System.out.println(httpResp);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void clearWorldChat(int id) {

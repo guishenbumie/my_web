@@ -11,12 +11,15 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/ca_test" />
             <option value="$PROJECT_DIR$/db_test" />
+            <option value="$PROJECT_DIR$/etcd_client" />
+            <option value="$PROJECT_DIR$/grpc_server" />
             <option value="$PROJECT_DIR$/hot_swap_common" />
             <option value="$PROJECT_DIR$/hot_swap_test" />
             <option value="$PROJECT_DIR$/hot_swap_web_test" />
             <option value="$PROJECT_DIR$/http_test" />
             <option value="$PROJECT_DIR$/https_client_test" />
             <option value="$PROJECT_DIR$/https_server_test" />
+            <option value="$PROJECT_DIR$/jetcd_client" />
             <option value="$PROJECT_DIR$/listener_test" />
             <option value="$PROJECT_DIR$/netty_client" />
             <option value="$PROJECT_DIR$/netty_server" />
