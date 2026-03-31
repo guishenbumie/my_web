@@ -126,7 +126,7 @@ public class Main {
                 .setHeader("timestamp", String.valueOf(ts));
 
         try {
-            var httpResp = HttpClient.postBody("http://127.0.0.1:12003/gm", body, options);//发送http请求
+            var httpResp = HttpClient.postBody("http://pst-test-external-hgate-2001.bytedgame.com:12003/gm", body, options);//发送http请求
             System.out.println(httpResp);
         } catch (Exception e) {
             throw new RuntimeException(e);
